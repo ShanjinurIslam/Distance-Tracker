@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:elo_programming_task/model/checkpoint.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class TaskUI extends StatefulWidget {
   TaskUI({Key key, this.title}) : super(key: key);
@@ -19,7 +21,29 @@ class MyBehavior extends ScrollBehavior {
 }
 
 class _TaskState extends State<TaskUI> {
+  static const EventChannel _eventChannel =
+      const EventChannel("pedometer.eventChannel");
+  Stream<int> _pedometerStream;
+  bool stepCountingStart = false;
   ScrollController _scrollController = new ScrollController();
+
+  Stream<int> get pedometerStream {
+    if (_pedometerStream == null) {
+      _pedometerStream =
+          _eventChannel.receiveBroadcastStream().map((stepCount) => stepCount);
+    }
+    return _pedometerStream;
+  }
+
+  void onData(int stepCountValue) {
+    print(stepCountValue);
+  }
+  
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,12 +103,12 @@ class _TaskState extends State<TaskUI> {
             ),
           ),
           Positioned(
-              bottom: (40.0 / 600.0) * MediaQuery.of(context).size.width ,
+              bottom: (40.0 / 600.0) * MediaQuery.of(context).size.width,
               right: (40.0 / 600.0) * MediaQuery.of(context).size.width,
               child: InkWell(
                 onTap: () {
                   _scrollController.animateTo(
-                    MediaQuery.of(context).size.height*.60,
+                    MediaQuery.of(context).size.height * .60,
                     curve: Curves.easeOut,
                     duration: const Duration(milliseconds: 500),
                   );
