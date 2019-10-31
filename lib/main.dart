@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Distance Tracker',
       theme: ThemeData(
-        primarySwatch: Colors.purple,
+        primarySwatch: Colors.grey,
       ),
       routes: {
         '/': (context) => HomeUI(),

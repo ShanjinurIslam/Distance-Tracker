@@ -59,6 +59,9 @@ class HomeUI extends StatelessWidget {
                 bottom: (40.0 / 600.0) * MediaQuery.of(context).size.width,
                 right: (40.0 / 600.0) * MediaQuery.of(context).size.width,
                 child: InkWell(
+                  onTap: () {
+                    Navigator.pushReplacementNamed(context, '/task');
+                  },
                   child: Container(
                     height: 60,
                     width: 170,
@@ -68,7 +71,13 @@ class HomeUI extends StatelessWidget {
                           new BorderRadius.all(const Radius.circular(30.0)),
                     ),
                     child: Center(
-                      child: Text('START',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 16),),
+                      child: Text(
+                        'START',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16),
+                      ),
                     ),
                   ),
                 )),
