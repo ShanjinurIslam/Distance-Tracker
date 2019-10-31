@@ -1,1 +1,0 @@
-//fetch checkpoint of a task
