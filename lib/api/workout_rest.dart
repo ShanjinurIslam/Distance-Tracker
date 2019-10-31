@@ -1,32 +1,32 @@
-import 'package:firebase_database/firebase_database.dart';
+import 'package:elo_programming_task/model/workout.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class WorkoutRest {
-  final databaseReference = FirebaseDatabase.instance.reference();
+  final databaseReference = Firestore.instance;
 
-  void createRecord() {
-    databaseReference.child("1").set({
-      'title': 'Mastering EJB',
-      'description': 'Programming Guide for J2EE'
-    });
-    databaseReference.child("2").set({
-      'title': 'Flutter in Action',
-      'description': 'Complete Programming Guide to learn Flutter'
-    });
+  void createRecord(Map<String, dynamic> dataobject) async {
+    DocumentReference ref =
+        await databaseReference.collection("workouts").add(dataobject);
+    print(ref.documentID);
   }
 
-  void getData() {
-    databaseReference.once().then((DataSnapshot snapshot) {
-      print('Data : ${snapshot.value}');
-    });
-  }
-
-  void updateData() {
+  List<Workout> getData() {
+    List<Workout> workouts = [];
     databaseReference
-        .child('1')
-        .update({'description': 'J2EE complete Reference'});
+        .collection("workouts")
+        .getDocuments()
+        .then((QuerySnapshot snapshot) {
+      snapshot.documents.forEach((f) {});
+    });
+
+    return workouts;
   }
 
-  void deleteData() {
-    databaseReference.child('1').remove();
+  void deleteData(String documentName) {
+    try {
+      databaseReference.collection('workouts').document(documentName).delete();
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }
