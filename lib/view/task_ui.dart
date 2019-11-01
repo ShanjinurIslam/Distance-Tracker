@@ -33,7 +33,7 @@ class _TaskState extends State<TaskUI> {
   int _stepCountValue;
   bool stepCountingStart = false;
   int initial = 0;
-  int checkpoint_value = 0;
+  int checkpointValue = 0;
   ScrollController _scrollController = new ScrollController();
 
   @override
@@ -86,7 +86,8 @@ class _TaskState extends State<TaskUI> {
               top: (100.0 / 1080.0) * MediaQuery.of(context).size.height,
               left: (40.0 / 600.0) * MediaQuery.of(context).size.width,
               child: new Text(
-                'TRACKING NOW...\nDistance Covered: ' + (_stepCountValue).toString(),
+                'TRACKING NOW...\nDistance Covered: ' +
+                    (_stepCountValue).toString(),
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: 30,
@@ -148,19 +149,23 @@ class _TaskState extends State<TaskUI> {
                     );
                     setState(() {
                       widget.counter++;
-                      //checkpoint_value = (_stepCountValue - checkpoint_value)  ;
-                      Checkpoint checkpoint = new Checkpoint(
-                          widget.counter, 0);
+                      //checkpointValue = (_stepCountValue - checkpointValue)  ;
+                      Checkpoint checkpoint = new Checkpoint(widget.counter, 0);
                       widget.checkPoints.add(checkpoint);
                     });
-                    if (/*_stepCountValue >= model.workoutDistance~/0.76 || */widget.counter==5) {
+                    if (/*_stepCountValue >= model.workoutDistance~/0.76 || */ widget
+                            .counter ==
+                        5) {
                       DateTime now = DateTime.now();
                       String date = DateFormat('EEE d MMM yyyy').format(now);
                       String time = DateFormat('kk:mm:ss').format(now);
                       Workout workout = new Workout(date, model.workoutDistance,
                           widget.checkPoints, time);
                       model.uploadData(workout);
-                      Navigator.pushReplacementNamed(context, '/finish');
+                      Navigator.pushReplacementNamed(
+                        context,
+                        '/finish',
+                      );
                     }
                   },
                   child: Container(

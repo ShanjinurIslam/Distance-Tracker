@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "497861486867",
+    "firebase_url": "https://distance-tracker-elo.firebaseio.com",
+    "project_id": "distance-tracker-elo",
+    "storage_bucket": "distance-tracker-elo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:497861486867:android:8fe64b6690df3902a6d2e6",
+        "android_client_info": {
+          "package_name": "com.shanjinur.elo_programming_task"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "497861486867-iudv5qctjpud058lnhljrftnfuhau3ut.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDi7Cen_KsIlpDziyLGcBqtVvOe7ltmZ28"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "497861486867-iudv5qctjpud058lnhljrftnfuhau3ut.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
