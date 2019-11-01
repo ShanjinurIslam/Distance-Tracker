@@ -3,8 +3,8 @@ import 'package:elo_programming_task/model/workout.dart';
 
 class WorkoutController {
   WorkoutRest rest = WorkoutRest();
-  List<Workout> fetchWorkOut() {
-    List<Workout> workouts = rest.getData();
+  Future<List<Workout>> fetchWorkOut() async {
+    List<Workout> workouts = await rest.getData();
     return workouts;
   }
 

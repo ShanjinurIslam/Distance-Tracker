@@ -13,8 +13,8 @@ class HomeUI extends StatefulWidget {
 class HomeUIState extends State<HomeUI> {
   final _text = TextEditingController();
   bool _validate = false;
-
-  Widget homeUIScreen() {
+  @override
+  Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
         builder: (context, child, model) => Scaffold(
                 body: SingleChildScrollView(
@@ -72,14 +72,14 @@ class HomeUIState extends State<HomeUI> {
                                   ? _validate = true
                                   : _validate = false;
                             });
-                            if(_text.text.isEmpty==false){
+                            if (_text.text.isEmpty == false) {
                               model.workoutDistance = double.parse(_text.text);
-                            Navigator.pushReplacementNamed(context, '/task');
+                              Navigator.pushReplacementNamed(context, '/task');
                             }
                           },
                           child: Container(
                             height: 60,
-                            width: 170,
+                            width: 150,
                             decoration: BoxDecoration(
                               color: Colors.grey,
                               borderRadius: new BorderRadius.all(
@@ -96,17 +96,38 @@ class HomeUIState extends State<HomeUI> {
                             ),
                           ),
                         )),
+                    Positioned(
+                        bottom:
+                            (40.0 / 600.0) * MediaQuery.of(context).size.width,
+                        left:
+                            (40.0 / 600.0) * MediaQuery.of(context).size.width,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, '/workouts');
+                          },
+                          child: Container(
+                            height: 60,
+                            width: 150,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: new BorderRadius.all(
+                                  const Radius.circular(30.0)),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Workouts',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16),
+                              ),
+                            ),
+                          ),
+                        )),
                   ],
                 ),
               ),
             )));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ScopedModel(
-      model: MainModel(),
-      child: homeUIScreen(),
-    );
   }
 }

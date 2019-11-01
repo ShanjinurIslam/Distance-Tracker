@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:elo_programming_task/controller/workout_controller.dart';
 import 'package:elo_programming_task/model/checkpoint.dart';
+import 'package:elo_programming_task/model/checkpoint.dart' as prefix0;
 import 'package:elo_programming_task/model/workout.dart';
 import 'package:elo_programming_task/scopedModel/main_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pedometer/pedometer.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:intl/intl.dart';
 
@@ -26,29 +28,53 @@ class MyBehavior extends ScrollBehavior {
 }
 
 class _TaskState extends State<TaskUI> {
-  static const EventChannel _eventChannel =
-      const EventChannel("pedometer.eventChannel");
-  Stream<int> _pedometerStream;
+  Pedometer _pedometer;
+  StreamSubscription<int> _subscription;
+  int _stepCountValue;
   bool stepCountingStart = false;
-  WorkoutController _workoutcontroller = new WorkoutController();
+  int initial = 0;
+  int checkpoint_value = 0;
   ScrollController _scrollController = new ScrollController();
 
-  Stream<int> get pedometerStream {
-    if (_pedometerStream == null) {
-      _pedometerStream =
-          _eventChannel.receiveBroadcastStream().map((stepCount) => stepCount);
-    }
-    return _pedometerStream;
+  @override
+  void initState() {
+    super.initState();
+    initPlatformState();
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    startListening();
   }
 
   void onData(int stepCountValue) {
     print(stepCountValue);
   }
 
-  @override
-  void initState() {
-    super.initState();
+  void startListening() {
+    _pedometer = new Pedometer();
+    _subscription = _pedometer.pedometerStream.listen(_onData,
+        onError: _onError, onDone: _onDone, cancelOnError: true);
   }
+
+  void stopListening() {
+    _subscription.cancel();
+  }
+
+  void _onData(int stepCountValue) async {
+    setState(() {
+      _stepCountValue = stepCountValue;
+      if (!stepCountingStart) {
+        initial = _stepCountValue;
+        stepCountingStart = true;
+      }
+      _stepCountValue = _stepCountValue - initial;
+    });
+  }
+
+  void _onDone() => print("Finished pedometer tracking");
+
+  void _onError(error) => print("Flutter Pedometer Error: $error");
 
   @override
   Widget build(BuildContext context) {
@@ -59,11 +85,11 @@ class _TaskState extends State<TaskUI> {
             Positioned(
               top: (100.0 / 1080.0) * MediaQuery.of(context).size.height,
               left: (40.0 / 600.0) * MediaQuery.of(context).size.width,
-              child: Text(
-                'TRACKING\nNOW...',
+              child: new Text(
+                'TRACKING NOW...\nDistance Covered: ' + (_stepCountValue).toString(),
                 style: TextStyle(
                     color: Colors.black,
-                    fontSize: 70,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold),
               ),
             ),
@@ -122,16 +148,18 @@ class _TaskState extends State<TaskUI> {
                     );
                     setState(() {
                       widget.counter++;
+                      //checkpoint_value = (_stepCountValue - checkpoint_value)  ;
                       Checkpoint checkpoint = new Checkpoint(
-                          widget.counter, widget.counter.toDouble());
+                          widget.counter, 0);
                       widget.checkPoints.add(checkpoint);
                     });
-                    if (widget.counter == 15) {
+                    if (/*_stepCountValue >= model.workoutDistance~/0.76 || */widget.counter==5) {
                       DateTime now = DateTime.now();
                       String date = DateFormat('EEE d MMM yyyy').format(now);
                       String time = DateFormat('kk:mm:ss').format(now);
-                      Workout workout = new Workout(date,model.workoutDistance, widget.checkPoints,time);
-                      _workoutcontroller.uploadData(workout);
+                      Workout workout = new Workout(date, model.workoutDistance,
+                          widget.checkPoints, time);
+                      model.uploadData(workout);
                       Navigator.pushReplacementNamed(context, '/finish');
                     }
                   },
